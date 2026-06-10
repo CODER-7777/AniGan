@@ -1,0 +1,71 @@
+/* client/src/index.css */
+
+:root {
+  /* Background colors — dark night sky */
+  --bg-primary:     #06060f;   
+  --bg-secondary:   #0d0d1f;   
+  --bg-card:        rgba(255, 255, 255, 0.04); 
+
+  /* Accent colors — sakura + cyan */
+  --sakura:         #ff6b9d;   
+  --sakura-glow:    rgba(255, 107, 157, 0.35); 
+  --cyan:           #00d4ff;   
+  --purple:         #8b5cf6;   
+
+  /* Text colors */
+  --text-primary:   #f0f0ff;   
+  --text-secondary: #8888aa;   
+
+  /* Gradients */
+  --gradient-sakura: linear-gradient(135deg, #ff6b9d 0%, #8b5cf6 100%);
+  --gradient-cyber:  linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+
+  /* Spacing & Borders */
+  --space-md:  16px;
+  --space-xl:  40px;
+  --radius-md:  16px;
+  --radius-pill: 9999px;
+
+  /* Fonts */
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;   
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Floating particle background (Pure CSS!) ───────────────── */
+body::before {
+  content: '';
+  position: fixed;    
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; 
+  z-index: -1;
+
+  /* These radial gradients create the glowing dots */
+  background-image: 
+    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(2px 2px at 25% 35%, rgba(255,107,157,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 60% 45%, rgba(0,212,255,0.4) 0%, transparent 100%),
+    radial-gradient(2px 2px at 80% 90%, rgba(139,92,246,0.5) 0%, transparent 100%);
+
+  animation: floatParticles 20s linear infinite;
+}
+
+@keyframes floatParticles {
+  0%   { transform: translateY(0px);  }
+  50%  { transform: translateY(-20px); }
+  100% { transform: translateY(0px);  }
+}
