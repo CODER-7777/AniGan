@@ -4,7 +4,7 @@ This project currently features a premium, interactive React UI that connects to
 
 However, the next evolutionary step for this application is **Option 5: Multi-Modal Anime Generation**.
 
-## 🚀 Option 5: Multi-Modal Anime Generation Overview
+## Option 5: Multi-Modal Anime Generation Overview
 
 The multi-modal anime generation feature allows a user to provide **both an image and a text prompt** (e.g., "Make this photo look like a Ghibli scene in the rain at sunset"). The system then generates an anime version that preserves the person/subject from the original photo while adopting the specific mood, environment, and artistic style described in the text.
 
