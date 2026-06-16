@@ -1,65 +1,165 @@
-/* client/src/index.css */
+/* ================================================================
+   ANIME STYLE TRANSFER — Design System
+   Write every line. Understand every line.
+   ================================================================ */
 
+/* ── CSS Custom Properties (your design tokens) ─────────────────
+   These are variables. You access them with var(--variable-name)
+   Change a value here — it updates everywhere on the site.
+   ──────────────────────────────────────────────────────────────── */
 :root {
-  /* Background colors — dark night sky */
-  --bg-primary:     #06060f;   
-  --bg-secondary:   #0d0d1f;   
-  --bg-card:        rgba(255, 255, 255, 0.04); 
+  /* Background colours — dark like a night sky */
+  --bg-primary:     #06060f;   /* almost black with a blue tint   */
+  --bg-secondary:   #0d0d1f;   /* slightly lighter dark navy       */
+  --bg-card:        rgba(255, 255, 255, 0.04); /* glass card base  */
+  --bg-card-hover:  rgba(255, 255, 255, 0.07);
 
-  /* Accent colors — sakura + cyan */
-  --sakura:         #ff6b9d;   
-  --sakura-glow:    rgba(255, 107, 157, 0.35); 
-  --cyan:           #00d4ff;   
-  --purple:         #8b5cf6;   
+  /* Accent colours — sakura + cyan, the anime signature */
+  --sakura:         #ff6b9d;   /* warm pink — sakura blossom       */
+  --sakura-light:   #ff8fb3;   /* lighter pink for hover states    */
+  --sakura-glow:    rgba(255, 107, 157, 0.35); /* pink glow shadow */
+  --cyan:           #00d4ff;   /* electric cyan — anime energy     */
+  --cyan-glow:      rgba(0, 212, 255, 0.30);   /* cyan glow shadow */
+  --purple:         #8b5cf6;   /* deep violet                      */
+  --purple-glow:    rgba(139, 92, 246, 0.35);  /* purple glow      */
 
-  /* Text colors */
-  --text-primary:   #f0f0ff;   
-  --text-secondary: #8888aa;   
+  /* Text colours */
+  --text-primary:   #f0f0ff;   /* slightly lavender white          */
+  --text-secondary: #8888aa;   /* muted grey-blue                  */
+  --text-accent:    #ff6b9d;   /* pink accent text                 */
 
-  /* Gradients */
+  /* Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.08);
+  --border-glow:    rgba(255, 107, 157, 0.40);
+
+  /* Gradients — you will use these constantly */
   --gradient-sakura: linear-gradient(135deg, #ff6b9d 0%, #8b5cf6 100%);
   --gradient-cyber:  linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+  --gradient-dark:   linear-gradient(180deg, #0d0d1f 0%, #06060f 100%);
+  --gradient-card:   linear-gradient(135deg,
+                       rgba(255,107,157,0.08) 0%,
+                       rgba(139,92,246,0.08) 100%);
 
-  /* Spacing & Borders */
+  /* Spacing — consistent rhythm throughout the site */
+  --space-xs:  4px;
+  --space-sm:  8px;
   --space-md:  16px;
+  --space-lg:  24px;
   --space-xl:  40px;
+  --space-2xl: 64px;
+
+  /* Border radius */
+  --radius-sm:  8px;
   --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
   --radius-pill: 9999px;
 
-  /* Fonts */
-  --font-body: 'Inter', sans-serif;
+  /* Transitions */
+  --transition-fast:   all 0.15s ease;
+  --transition-normal: all 0.3s ease;
+  --transition-slow:   all 0.5s ease;
+
+  /* Shadows — glowing, not flat */
+  --shadow-sakura: 0 0 30px rgba(255, 107, 157, 0.25),
+                   0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-cyan:   0 0 30px rgba(0, 212, 255, 0.20),
+                   0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card:   0 8px 32px rgba(0, 0, 0, 0.5),
+                   0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* Typography */
+  --font-body:    'Inter', 'Noto Sans JP', sans-serif;
+  --font-display: 'Cinzel', serif;
+  --font-jp:      'Noto Sans JP', sans-serif;
 }
 
-/* Global Reset */
+/* ── Global Reset ────────────────────────────────────────────────
+   Remove browser default styles so you control everything.
+   ──────────────────────────────────────────────────────────────── */
 *, *::before, *::after {
-  box-sizing: border-box;   
+  box-sizing: border-box;   /* padding doesn't add to width    */
   margin: 0;
   padding: 0;
+}
+
+html {
+  font-size: 16px;           /* 1rem = 16px everywhere          */
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-body);
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  line-height: 1.6;
   min-height: 100vh;
+
+  /* Prevent horizontal scroll on mobile */
   overflow-x: hidden;
+
+  /* Subtle noise texture over the background */
+  background-image:
+    radial-gradient(ellipse at 20% 10%,
+      rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%,
+      rgba(255, 107, 157, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%,
+      rgba(0, 212, 255, 0.04) 0%, transparent 70%);
 }
 
-/* ── Floating particle background (Pure CSS!) ───────────────── */
+/* ── Selection colour ───────────────────────────────────────────
+   When user selects text, it highlights in sakura pink.
+   ──────────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--sakura-glow);
+  color: var(--text-primary);
+}
+
+/* ── Scrollbar — custom to match theme ─────────────────────────
+   Chrome/Edge support. Firefox: scrollbar-color below.
+   ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--sakura), var(--purple));
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--sakura-light); }
+
+/* Firefox scrollbar */
+html { scrollbar-color: var(--sakura) var(--bg-primary); scrollbar-width: thin; }
+
+/* ── Floating particle background ───────────────────────────────
+   We use ::before and ::after on body to create two layers
+   of floating dot particles, giving depth.
+   ──────────────────────────────────────────────────────────────── */
+
 body::before {
   content: '';
-  position: fixed;    
+  position: fixed;    /* fixed = stays while you scroll      */
   top: 0; left: 0;
   width: 100%; height: 100%;
-  pointer-events: none; 
-  z-index: -1;
+  pointer-events: none; /* clicks pass through to content    */
+  z-index: 0;
 
-  /* These radial gradients create the glowing dots */
-  background-image: 
-    radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(2px 2px at 25% 35%, rgba(255,107,157,0.5) 0%, transparent 100%),
-    radial-gradient(2px 2px at 60% 45%, rgba(0,212,255,0.4) 0%, transparent 100%),
-    radial-gradient(2px 2px at 80% 90%, rgba(139,92,246,0.5) 0%, transparent 100%);
+  /* 40 small white dots scattered randomly */
+  /* Each box-shadow value = one dot: x y blur spread colour  */
+  background-image: radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 35%, rgba(255,107,157,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 8%,  rgba(0,212,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 20%, rgba(139,92,246,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,107,157,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 70%, rgba(0,212,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(2px 2px at 90% 10%, rgba(255,107,157,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 55%, rgba(139,92,246,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5%  40%, rgba(0,212,255,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 55% 25%, rgba(255,107,157,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 85%, rgba(139,92,246,0.5) 0%, transparent 100%);
 
   animation: floatParticles 20s linear infinite;
 }

@@ -1,54 +1,761 @@
-/* client/src/App.css */
+/* ================================================================
+   App.css — All component styles
+   ================================================================ */
 
+/* ── Page wrapper ───────────────────────────────────────────────
+   Everything sits inside this. It is a flex column.
+   ──────────────────────────────────────────────────────────────── */
 .app {
+  position: relative;
+  z-index: 1;           /* sits above the body::before particles */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: var(--space-xl);
 }
 
-.title {
-  font-size: 3rem;
+/* ── HEADER ─────────────────────────────────────────────────────
+   Floating glass header with a blur backdrop.
+   ──────────────────────────────────────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: var(--space-md) var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* Glass morphism effect */
+  background: rgba(6, 6, 15, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  /* Subtle bottom border */
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.header-logo-icon {
+  font-size: 1.5rem;
+}
+
+.header-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+
+  /* Gradient text — the key anime premium look */
   background: var(--gradient-sakura);
-  -webkit-background-clip: text; /* This makes the text gradient! */
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-jp {
+  font-family: var(--font-jp);
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: 0.2em;
+}
+
+/* ── HERO SECTION ───────────────────────────────────────────────
+   Big dramatic title area at the top.
+   ──────────────────────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+}
+
+.hero-eyebrow {
+  /* Small text above the main title */
+  font-family: var(--font-jp);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: var(--space-md);
+
+  /* Gentle fade in animation */
+  animation: fadeInDown 0.6s ease forwards;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem); /* responsive: grows with viewport */
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-md);
+
+  /* Gradient text */
+  background: linear-gradient(135deg,
+    var(--text-primary) 0%,
+    var(--sakura) 50%,
+    var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  animation: fadeInDown 0.7s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+
+  animation: fadeInDown 0.7s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+/* ── MAIN CONTENT ───────────────────────────────────────────────
+   The central work area — constrained width, centred.
+   ──────────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-xl) var(--space-2xl);
+}
+
+/* ── GLASS CARD ─────────────────────────────────────────────────
+   Reusable frosted glass panel.
+   backdrop-filter: blur() creates the frosted glass effect.
+   border is semi-transparent — lets background show through edges.
+   ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+
+  /* A very subtle gradient overlay inside the card */
+  background-image: var(--gradient-card);
+
+  transition: var(--transition-normal);
+}
+
+.card:hover {
+  border-color: rgba(255, 107, 157, 0.20);
+  box-shadow: var(--shadow-sakura);
+}
+
+/* ── STYLE SELECTOR ─────────────────────────────────────────────
+   The row of style buttons (Hayao, Paprika, Shinkai).
+   ──────────────────────────────────────────────────────────────── */
+.style-selector {
   margin-bottom: var(--space-xl);
 }
 
-/* Glassmorphism Card */
-.card {
-  width: 100%;
-  max-width: 800px;
-  background: var(--bg-card);
-  backdrop-filter: blur(20px); /* This is the frosted glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: var(--space-xl);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+.style-selector-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: var(--space-md);
 }
 
-/* Premium Button */
+.style-buttons {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.style-btn {
+  /* Base style — inactive button */
+  padding: 10px var(--space-lg);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  letter-spacing: 0.03em;
+  position: relative;
+  overflow: hidden;   /* clips the shine effect inside */
+}
+
+/* Hover state */
+.style-btn:hover {
+  border-color: rgba(255, 107, 157, 0.40);
+  color: var(--text-primary);
+  background: rgba(255, 107, 157, 0.08);
+}
+
+/* Active / selected state */
+.style-btn.active {
+  background: var(--gradient-sakura);
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 0 20px var(--sakura-glow),
+              0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Shine sweep animation on the active button */
+.style-btn.active::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent);
+  animation: shineSweep 2.5s ease-in-out infinite;
+}
+
+@keyframes shineSweep {
+  0%   { left: -100%; }
+  100% { left: 200%;  }
+}
+
+/* Style descriptions below each button */
+.style-meta {
+  margin-top: var(--space-sm);
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.style-tag {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+.style-tag span {
+  color: var(--sakura);
+  margin-right: 4px;
+}
+
+/* ── DROPZONE ───────────────────────────────────────────────────
+   The drag-and-drop upload area.
+   ──────────────────────────────────────────────────────────────── */
+.dropzone {
+  border: 2px dashed rgba(255, 107, 157, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+
+  background: rgba(255, 107, 157, 0.02);
+}
+
+/* Corner accents — decorative anime-style corners */
+.dropzone::before,
+.dropzone::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--sakura);
+  border-style: solid;
+  opacity: 0.4;
+  transition: var(--transition-normal);
+}
+
+.dropzone::before {
+  top: 12px; left: 12px;
+  border-width: 2px 0 0 2px;    /* top-left corner */
+  border-radius: 4px 0 0 0;
+}
+
+.dropzone::after {
+  bottom: 12px; right: 12px;
+  border-width: 0 2px 2px 0;    /* bottom-right corner */
+  border-radius: 0 0 4px 0;
+}
+
+.dropzone:hover,
+.dropzone.drag-active {
+  border-color: rgba(255, 107, 157, 0.60);
+  background: rgba(255, 107, 157, 0.05);
+  box-shadow: 0 0 40px rgba(255, 107, 157, 0.08);
+}
+
+.dropzone:hover::before,
+.dropzone:hover::after,
+.dropzone.drag-active::before,
+.dropzone.drag-active::after {
+  opacity: 0.8;
+  width: 30px;
+  height: 30px;
+}
+
+.dropzone-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  display: block;
+
+  /* Gentle float animation */
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-8px); }
+}
+
+.dropzone-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  letter-spacing: 0.02em;
+}
+
+.dropzone-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+.dropzone-subtitle em {
+  color: var(--sakura);
+  font-style: normal;
+}
+
+/* ── TRANSFORM BUTTON ───────────────────────────────────────────
+   The main CTA button. Must feel like a final boss attack button.
+   ──────────────────────────────────────────────────────────────── */
 .transform-btn {
   width: 100%;
-  padding: 18px;
+  padding: 18px var(--space-xl);
   border: none;
   border-radius: var(--radius-md);
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-normal);
+  margin-top: var(--space-lg);
+
+  /* Gradient background */
   background: var(--gradient-sakura);
   color: white;
-  margin-top: var(--space-md);
-  transition: all 0.3s ease;
+
+  /* Layered glow shadow */
+  box-shadow: 0 0 0 0 var(--sakura-glow),
+              0 4px 20px rgba(0,0,0,0.4);
 }
 
-.transform-btn:hover {
+.transform-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 0 40px var(--sakura-glow);
+  box-shadow: 0 0 40px var(--sakura-glow),
+              0 8px 30px rgba(0,0,0,0.5);
+}
+
+.transform-btn:active:not(:disabled) {
+  transform: translateY(0px);
+}
+
+/* Ripple effect on click */
+.transform-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.transform-btn:active::before {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+
+/* Shine sweep on button — same as style-btn */
+.transform-btn:not(:disabled)::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -100%;
+  width: 50%; height: 200%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    transparent);
+  animation: shineSweep 3s ease-in-out infinite;
 }
 
 .transform-btn:disabled {
-  background: #333;
+  background: linear-gradient(135deg, #333 0%, #444 100%);
   cursor: not-allowed;
+  box-shadow: none;
   opacity: 0.5;
+}
+
+.transform-btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── LOADING STATE ───────────────────────────────────────────────
+   The spinner that shows while ML is processing.
+   ──────────────────────────────────────────────────────────────── */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Full loading overlay over the result area */
+.loading-overlay {
+  position: absolute;
+  inset: 0;   /* shorthand for top:0 right:0 bottom:0 left:0 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  background: rgba(6, 6, 15, 0.85);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(4px);
+}
+
+.loading-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+}
+
+.loading-jp {
+  font-family: var(--font-jp);
+  font-size: 0.7rem;
+  color: var(--sakura);
+  letter-spacing: 0.2em;
+}
+
+/* Progress dots animation */
+.loading-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.loading-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sakura);
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+  40%            { transform: scale(1.0); opacity: 1.0; }
+}
+
+/* ── BEFORE / AFTER DISPLAY ─────────────────────────────────────
+   The two-panel image comparison area.
+   ──────────────────────────────────────────────────────────────── */
+.result-section {
+  margin-top: var(--space-xl);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: 1fr; }
+}
+
+.image-panel {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: var(--transition-normal);
+  min-height: 200px;
+}
+
+.image-panel:hover {
+  border-color: rgba(255, 107, 157, 0.25);
+  box-shadow: var(--shadow-sakura);
+}
+
+/* Coloured top accent bar per panel */
+.image-panel--original::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-cyber);
+  z-index: 2;
+}
+
+.image-panel--result::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-sakura);
+  z-index: 2;
+}
+
+.panel-label {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 3;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.panel-label--original {
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.30);
+  color: var(--cyan);
+}
+
+.panel-label--result {
+  background: rgba(255, 107, 157, 0.15);
+  border: 1px solid rgba(255, 107, 157, 0.30);
+  color: var(--sakura);
+}
+
+/* The actual image */
+.result-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-md);
+
+  /* Fade in when it appears */
+  animation: imageFadeIn 0.5s ease forwards;
+}
+
+@keyframes imageFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* Download button overlaid on the result */
+.download-btn {
+  position: absolute;
+  bottom: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 3;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 107, 157, 0.40);
+  background: rgba(6, 6, 15, 0.85);
+  color: var(--sakura);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(10px);
+  transition: var(--transition-fast);
+}
+
+.download-btn:hover {
+  background: var(--gradient-sakura);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 16px var(--sakura-glow);
+}
+
+/* ── DIVIDER WITH ARROW ──────────────────────────────────────────
+   The → arrow between Original and Result panels.
+   ──────────────────────────────────────────────────────────────── */
+.transform-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--sakura);
+  filter: drop-shadow(0 0 8px var(--sakura-glow));
+  animation: pulseArrow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { opacity: 0.5; transform: scale(0.9);  }
+  50%       { opacity: 1.0; transform: scale(1.1);  }
+}
+
+/* ── BADGE / PILL COMPONENTS ────────────────────────────────────
+   Small labelling elements used throughout.
+   ──────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.badge--sakura {
+  background: rgba(255, 107, 157, 0.12);
+  border: 1px solid rgba(255, 107, 157, 0.25);
+  color: var(--sakura);
+}
+
+.badge--cyan {
+  background: rgba(0, 212, 255, 0.10);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  color: var(--cyan);
+}
+
+.badge--purple {
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: var(--purple);
+}
+
+/* ── DIVIDER LINE ───────────────────────────────────────────────
+   Decorative horizontal rule between sections.
+   ──────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--border-subtle) 20%,
+    rgba(255, 107, 157, 0.20) 50%,
+    var(--border-subtle) 80%,
+    transparent 100%);
+  margin: var(--space-xl) 0;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────────
+   Minimal footer — just a line of credits.
+   ──────────────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+.footer span {
+  color: var(--sakura);
+}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────────
+   Reusable entrance animations.
+   ──────────────────────────────────────────────────────────────── */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Apply entrance animation to cards */
+.card {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Stagger cards if multiple — add these classes manually */
+.animate-delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+.animate-delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+.animate-delay-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+
+/* ── GLOW PULSE — for live indicators ───────────────────────────
+   A pulsing dot that shows the service is running.
+   ──────────────────────────────────────────────────────────────── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  margin-right: 6px;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);   }
 }
