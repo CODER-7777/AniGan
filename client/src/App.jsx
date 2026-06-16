@@ -15,6 +15,7 @@ export default function App() {
   const [resultURL,     setResultURL]     = useState(null)
   const [loading,       setLoading]       = useState(false)
   const [selectedStyle, setSelectedStyle] = useState('hayao')
+  const [prompt,        setPrompt]        = useState('')
 
   const onDrop = useCallback((accepted) => {
     const f = accepted[0]
@@ -38,14 +39,17 @@ export default function App() {
       const formData = new FormData()
       formData.append('image', file)
       formData.append('style', selectedStyle)
+      formData.append('prompt', prompt)
       const res = await axios.post(
         'http://localhost:3001/api/transform',
-        formData
+        formData,
+        { timeout: 120000 }  // 2 min timeout for diffusion
       )
       setResultURL(res.data.output)
     } catch (err) {
       console.error(err)
-      alert('Transform failed — check console')
+      const msg = err.response?.data?.error || 'Transform failed — check console'
+      alert(msg)
     } finally {
       setLoading(false)
     }
@@ -65,11 +69,11 @@ export default function App() {
 
       {/* ── Hero ───────────────────────────────────────── */}
       <section className="hero">
-        <p className="hero-eyebrow">Powered by AnimeGANv2</p>
+        <p className="hero-eyebrow">Multi-Modal Anime Generation</p>
         <h1 className="hero-title">Transform Reality<br />Into Anime</h1>
         <p className="hero-subtitle">
-          Upload any photo and watch it become a frame from your
-          favourite anime film in seconds.
+          Upload a photo and describe the mood you want.
+          Our AI will generate an anime version that matches both.
         </p>
       </section>
 
@@ -119,6 +123,21 @@ export default function App() {
             </p>
           </div>
 
+          {/* ── Text Prompt Input (Multi-Modal) ────────── */}
+          <div className="prompt-section">
+            <p className="style-selector-label">Describe Your Vision</p>
+            <input
+              type="text"
+              className="glass-input"
+              placeholder='e.g. "Ghibli scene in the rain at sunset" or "cyberpunk neon city at night"'
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            <p className="prompt-hint">
+              Optional — adds mood, weather, lighting to the anime conversion
+            </p>
+          </div>
+
           {/* Transform Button */}
           <button
             className="transform-btn"
@@ -129,7 +148,7 @@ export default function App() {
               {loading ? (
                 <>
                   <span className="spinner" />
-                  Transforming...
+                  Generating anime...
                 </>
               ) : (
                 <>✨ Transform to Anime</>
@@ -148,7 +167,13 @@ export default function App() {
                           justifyContent: 'space-between',
                           marginBottom: 'var(--space-lg)' }}>
               <p className="style-selector-label">Result</p>
-              {resultURL && (
+              {loading && (
+                <span className="badge badge--purple">
+                  <span className="spinner" style={{ width: 10, height: 10, borderWidth: 1.5 }} />
+                  AI is generating...
+                </span>
+              )}
+              {resultURL && !loading && (
                 <span className="badge badge--sakura">
                   <span className="status-dot" />
                   Complete
@@ -181,8 +206,11 @@ export default function App() {
                     <div className="loading-dots">
                       <span /><span /><span />
                     </div>
-                    <p className="loading-text">Processing...</p>
+                    <p className="loading-text">AI is re-rendering your photo as anime...</p>
                     <p className="loading-jp">変換中</p>
+                    <p className="loading-text" style={{ fontSize: '0.7rem', marginTop: '8px' }}>
+                      This may take 15-60 seconds
+                    </p>
                   </div>
                 )}
 
@@ -193,7 +221,7 @@ export default function App() {
                       alt="anime result"
                       className="result-image"
                     />
-                    
+
                     <a
                       href={resultURL}
                       download="anime_result.jpg"
@@ -213,7 +241,7 @@ export default function App() {
 
       {/* ── Footer ─────────────────────────────────────── */}
       <footer className="footer">
-        Built with <span>♥</span> at ARIITK · Powered by AnimeGANv2
+        Built with <span>♥</span> at ARIITK · Powered by Stable Diffusion
       </footer>
 
     </div>

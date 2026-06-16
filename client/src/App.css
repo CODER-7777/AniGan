@@ -346,6 +346,51 @@
   font-style: normal;
 }
 
+/* ── TEXT PROMPT INPUT ──────────────────────────────────────────
+   Glass morphism text input for the multi-modal prompt.
+   ──────────────────────────────────────────────────────────────── */
+.prompt-section {
+  margin-top: var(--space-lg);
+}
+
+.glass-input {
+  width: 100%;
+  padding: 14px var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  transition: var(--transition-normal);
+  outline: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-input::placeholder {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.glass-input:focus {
+  border-color: var(--sakura);
+  box-shadow: 0 0 20px var(--sakura-glow);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.prompt-hint {
+  margin-top: var(--space-xs);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  font-style: italic;
+}
+
 /* ── TRANSFORM BUTTON ───────────────────────────────────────────
    The main CTA button. Must feel like a final boss attack button.
    ──────────────────────────────────────────────────────────────── */

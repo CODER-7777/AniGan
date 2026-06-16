@@ -1,80 +1,95 @@
-# AnimeStyle (AniGan) - Multi-Modal Anime Generation
+# 🎌 AniGan: Multi-Modal Anime Style Transfer
 
-This project currently features a premium, interactive React UI that connects to a backend ML service to transform photos into an anime art style using AnimeGANv2.
+AniGan is a full-stack web application that transforms standard photographs into stunning, high-quality anime-style art. It features a premium, Studio Ghibli-inspired UI with glassmorphism effects and leverages advanced Generative AI (Stable Diffusion/FLUX via Hugging Face) to perform multi-modal image-to-image translations guided by user text prompts.
 
-However, the next evolutionary step for this application is **Option 5: Multi-Modal Anime Generation**.
+![AniGan Preview](https://img.shields.io/badge/Status-Active-success) ![Stack](https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20Flask-blue) ![AI](https://img.shields.io/badge/AI-FLUX.1--Kontext--dev-purple)
 
-## Option 5: Multi-Modal Anime Generation Overview
+---
 
-The multi-modal anime generation feature allows a user to provide **both an image and a text prompt** (e.g., "Make this photo look like a Ghibli scene in the rain at sunset"). The system then generates an anime version that preserves the person/subject from the original photo while adopting the specific mood, environment, and artistic style described in the text.
+## ✨ Features
 
-### Technical Depth & Architecture
+- **Multi-Modal Generation**: Upload an image AND provide a text prompt (e.g., "Ghibli scene in the rain at sunset") to control the exact mood, lighting, and style of the output.
+- **Premium UI/UX**: A highly polished, responsive interface built with raw CSS variables, featuring pure CSS particle backgrounds, glassmorphism cards, and fluid animations.
+- **Microservices Architecture**: Clean separation of concerns with a React frontend, an Express gateway server, and a Python/Flask ML service.
+- **Cloud AI Integration**: Uses the Hugging Face Inference API to access state-of-the-art diffusion models without requiring massive local GPU resources.
 
-This requires a sophisticated combination of computer vision and natural language processing models.
+---
 
-#### 1. The Core Stack
-- **Text Encoder (CLIP/T5):** To understand the semantic meaning of the user's text prompt ("Ghibli scene in the rain at sunset").
-- **Vision Model:** To extract the structural and identity features from the user's uploaded photo.
-- **Text-Guided Diffusion Model:** We will use a model like **Stable Diffusion (with ControlNet)** or **InstructPix2Pix**.
-  - **ControlNet** is the ideal choice here. We can use a Canny edge detector or Depth map on the original photo to ensure the final generated image strictly follows the spatial structure of the uploaded photo.
-  - The text prompt acts as the style and context guide.
+## 🛠️ Tech Stack
 
-#### 2. Pipeline Implementation Steps
-1. **Input Stage:** The user uploads an image (`img`) and types a prompt (`txt`).
-2. **Preprocessing:** 
-   - The original image is passed through a preprocessor (e.g., Canny edge detection or HED boundary detection) to extract a control map (`C_map`).
-3. **Multi-Modal Fusion (Diffusion Process):**
-   - We initialize a latent noise vector.
-   - The Diffusion model uses the `txt` prompt via cross-attention layers.
-   - The `C_map` is injected via ControlNet into the U-Net blocks of the diffusion model, guiding the spatial layout.
-   - We specifically use a fine-tuned "Anime" Checkpoint (e.g., Anything V3/V5, or NijiJourney-inspired models) as the base diffusion model.
-4. **Output Stage:** The model denoises the image into a high-quality anime illustration matching the prompt.
+*   **Frontend (`client/`)**: React, Vite, Axios, React Dropzone, Pure CSS (Custom Design System).
+*   **Backend (`server/`)**: Node.js, Express, Multer (for file handling).
+*   **ML Service (`ml-service/`)**: Python, Flask, Hugging Face Hub (`huggingface_hub`), Pillow.
+*   **AI Model**: `black-forest-labs/FLUX.1-Kontext-dev` (Image-to-Image diffusion model).
 
-### How to Implement in This Repository
+---
 
-#### Frontend (`client/`)
-1. **Add a Prompt Input:** Update the drag-and-drop area in `App.jsx` to include a text input field for the prompt.
-2. **State Management:** Add `const [prompt, setPrompt] = useState('')` and append it to the `FormData` in `handleTransform`.
-3. **Loading States:** Update the loading spinner to reflect the longer processing times of diffusion models (typically 5-15 seconds).
+## 🚀 Getting Started
 
-#### Backend (`server/`)
-1. **API Update:** Modify `index.js` to accept the `prompt` parameter from the multipart form data.
-2. **Forwarding:** Pass both the image buffer and the text prompt to the ML service.
+To run this application locally, you need to start all three services. 
 
-#### ML Service (`ml-service/`)
-1. **Shift from GAN to Diffusion:** AnimeGANv2 is too rigid for text guidance. We must integrate a Python script that loads `diffusers` (Hugging Face).
-2. **Model Loading (Python Example):**
-```python
-from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
-import torch
-from diffusers.utils import load_image
+### Prerequisites
+- Node.js (v16+)
+- Python (v3.8+)
+- A **Free Hugging Face Token** (Get one at [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens))
 
-# Load Anime ControlNet and Base Model
-controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)
-pipe = StableDiffusionControlNetPipeline.from_pretrained("andite/anything-v4.0", controlnet=controlnet, torch_dtype=torch.float16)
-pipe.to("cuda")
+### 1. Start the ML Service (Terminal 1)
+This service handles the AI image generation.
+```bash
+cd ml-service
 
-def generate_multi_modal_anime(image_path, text_prompt):
-    init_image = load_image(image_path)
-    # Extract edges (Canny)
-    canny_image = get_canny_edges(init_image) 
-    
-    # Generate
-    prompt = text_prompt + ", masterpiece, best quality, highly detailed anime"
-    negative_prompt = "lowres, bad anatomy, bad hands, cropped, worst quality"
-    
-    result = pipe(prompt, negative_prompt=negative_prompt, image=canny_image).images[0]
-    return result
+# Create and activate a virtual environment (if not already done)
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+# Install dependencies
+pip install flask pillow huggingface_hub python-dotenv
+
+# Set up your Hugging Face Token
+# Create a .env file in the ml-service folder and add:
+# HF_TOKEN=your_huggingface_token_here
+
+# Run the Flask server
+python app.py
 ```
+*Runs on `http://127.0.0.1:5001`*
 
-### UI Adjustments (Design System)
-The current UI is already designed to feel premium. To add the text input without breaking the glassmorphism aesthetic:
-- Create a frosted glass input field `<input type="text" className="glass-input" />`.
-- Style it with `background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle); color: var(--text-primary);`.
-- Place it directly underneath the image dropzone but above the "Transform" button.
+### 2. Start the Node.js Server (Terminal 2)
+This service handles file uploads and acts as a gateway between the frontend and the ML service.
+```bash
+cd server
 
-### Roadmap
-- [x] Phase 1: Establish premium anime UI with CSS custom properties, glassmorphism, and responsive React logic.
-- [ ] Phase 2: Set up Python microservice with `diffusers` and `ControlNet`.
-- [ ] Phase 3: Add text input to the frontend and connect the multi-modal pipeline.
-- [ ] Phase 4: Implement Region-by-Region style transfer (Option 1) using attention maps and segmentation masks.
+# Install dependencies
+npm install
+
+# Start the Express server
+node index.js
+```
+*Runs on `http://localhost:3001`*
+
+### 3. Start the React Frontend (Terminal 3)
+This is the beautiful user interface.
+```bash
+cd client
+
+# Install dependencies
+npm install
+
+# Start the Vite development server
+npm run dev
+```
+*Runs on `http://localhost:5173`*
+
+Open `http://localhost:5173` in your browser, upload an image, type an optional prompt, and click **Transform to Anime**!
+
+---
+
+## 🧠 Key Takeaways & Learnings
+
+Building this project provided deep insights into modern web development and AI integration:
+
+1. **Evolution of ML Models**: We initially explored lightweight GANs (AnimeGANv2) which act like complex color filters. We pivoted to **Diffusion Models** (FLUX via Hugging Face) to achieve true *Multi-Modal* capabilities, allowing text prompts to guide the structural and stylistic re-rendering of the image.
+2. **Navigating Network Constraints & API Providers**: We encountered DNS blocking issues with standard Hugging Face inference endpoints (`api-inference.huggingface.co`). We learned how to debug API failures using raw `requests` and successfully pivoted to models served via alternative providers (like `fal.ai` via the HF Hub) that bypassed the network restrictions.
+3. **Microservices Communication**: Successfully architected a pipeline where a React client sends multipart form data (images + text) to a Node.js server, which temporarily stores the file and forwards the payload to a Python Flask service for heavy lifting, returning the finalized asset URLs back up the chain.
+4. **Handling Long-Running Processes**: Diffusion models take time (15-30 seconds). We implemented proper UI loading states, progress indicators, and extended Axios timeout configurations (`timeout: 120000`) to prevent premature connection drops during AI generation.
+5. **Advanced CSS Engineering**: Rather than relying on frameworks like Tailwind, we built a bespoke "Studio Ghibli" design system from scratch using CSS Custom Properties (variables). This taught us the power of `backdrop-filter` for glassmorphism, pure CSS keyframe animations (like the floating particles background), and dynamic gradient states.
