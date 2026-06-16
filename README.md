@@ -1,4 +1,4 @@
-# 🎌 AniGan: Multi-Modal Anime Style Transfer
+# AniGan: Multi-Modal Anime Style Transfer
 
 AniGan is a full-stack web application that transforms standard photographs into stunning, high-quality anime-style art. It features a premium, Studio Ghibli-inspired UI with glassmorphism effects and leverages advanced Generative AI (Stable Diffusion/FLUX via Hugging Face) to perform multi-modal image-to-image translations guided by user text prompts.
 
@@ -6,7 +6,7 @@ AniGan is a full-stack web application that transforms standard photographs into
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Multi-Modal Generation**: Upload an image AND provide a text prompt (e.g., "Ghibli scene in the rain at sunset") to control the exact mood, lighting, and style of the output.
 - **Premium UI/UX**: A highly polished, responsive interface built with raw CSS variables, featuring pure CSS particle backgrounds, glassmorphism cards, and fluid animations.
@@ -15,7 +15,7 @@ AniGan is a full-stack web application that transforms standard photographs into
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 *   **Frontend (`client/`)**: React, Vite, Axios, React Dropzone, Pure CSS (Custom Design System).
 *   **Backend (`server/`)**: Node.js, Express, Multer (for file handling).
@@ -24,7 +24,7 @@ AniGan is a full-stack web application that transforms standard photographs into
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 To run this application locally, you need to start all three services. 
 
@@ -84,7 +84,7 @@ Open `http://localhost:5173` in your browser, upload an image, type an optional 
 
 ---
 
-## 🧠 Key Takeaways & Learnings
+## Key Takeaways & Learnings
 
 Building this project provided deep insights into modern web development and AI integration:
 
